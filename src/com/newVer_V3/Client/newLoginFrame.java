@@ -103,7 +103,7 @@ public class newLoginFrame extends JFrame implements Config {
             this.setDefaultCloseOperation(1);
         }
         else {
-
+            System.out.println();
         }
         //获取数据库中用户信息
     }

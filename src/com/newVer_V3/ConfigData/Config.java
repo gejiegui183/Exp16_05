@@ -18,7 +18,7 @@ public interface Config {
     public static final int registerHeight = 480;
 
     public static Image icon = new ImageIcon("./Image/QQ_64.png").getImage();
-    public static Image trayIconImage = new ImageIcon("./Image/QQ_16.png").getImage();
+//    public static Image trayIconImage = new ImageIcon("./Image/QQ_16.png").getImage();
 
 
 }

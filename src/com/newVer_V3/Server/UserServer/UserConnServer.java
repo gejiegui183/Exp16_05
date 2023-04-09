@@ -17,6 +17,6 @@ public class UserConnServer {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("用户信息服务器开启<-UserConnServer");
+//        System.out.println("用户信息服务器开启<-UserConnServer");
     }
 }
