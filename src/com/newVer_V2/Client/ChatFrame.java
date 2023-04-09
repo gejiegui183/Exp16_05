@@ -1,20 +1,16 @@
 package com.newVer_V2.Client;
 
 import com.newVer_V2.Server.Message.ClientMsgSaver;
+import com.newVer_V2.Server.Message.MessageServer;
 import org.json.JSONObject;
 
 import javax.swing.*;
-import javax.xml.crypto.Data;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -29,7 +25,7 @@ public class ChatFrame extends JFrame {
     JPanel northPanel;
     JButton flush;
     String reciverID;
-    DatagramSocket reciverSocket;
+
 
     public ChatFrame(){
 
@@ -111,6 +107,7 @@ public class ChatFrame extends JFrame {
             e.printStackTrace();
         }
         textField.setText("");
+//        new ClientMsgSaver(this).start();
     }
 
     public void msgDisplay(String message , int align){
@@ -130,35 +127,13 @@ public class ChatFrame extends JFrame {
         northPanel.updateUI();
     }
 
-
     public void init(){
+        new MessageServer(this);
         setWindows();
         layOut();
         messagePanelBackGround();
         buttonSet();
-        new reciver().start();
         this.setVisible(true);
-    }
-
-    class reciver extends Thread{
-        @Override
-        public void run() {
-            byte [] data = new byte[4096];
-            while (true) {
-                DatagramPacket packet =new DatagramPacket(data , data.length);
-                System.out.println(packet + "<-ChatFrame");
-//                try {
-//                    reciverSocket.receive(packet);
-//                    int msgLen = packet.getLength();
-//                    String msg = new String(data , 0 , msgLen);
-//                    Thread.sleep(50);
-//                    msgDisplay(msg , FlowLayout.LEFT);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-
-            }
-        }
     }
 
 }
