@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" defaultCharsetForPropertiesFiles="GBK">
+    <file url="file://$PROJECT_DIR$/src/com/company/Client/Login.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/com/company/Client/newClient.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/com/company/Server/ClientInfoGet.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/com/company/Server/ServerHost.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/lib/mysql-connector-j-8.0.32.jar" charset="GBK" />
+    <file url="PROJECT" charset="GBK" />
+  </component>
+</project>
