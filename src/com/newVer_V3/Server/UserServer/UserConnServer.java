@@ -7,7 +7,7 @@ import java.net.ServerSocket;
 
 public class UserConnServer {
     ServerSocket userInfoServer;
-    int port = 26000;
+    int port = 18000;
 
     public UserConnServer(){}
 
@@ -17,6 +17,7 @@ public class UserConnServer {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        System.out.println("用户信息服务器开启<-UserConnServer");
+        System.out.println("用户信息服务器开启<-UserConnServer");
+
     }
 }

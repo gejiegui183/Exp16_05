@@ -8,13 +8,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class ChatFrame extends JFrame {
+public class ChatFrame extends JFrame implements WindowListener {
     Socket msgSender;
     int msgPort = 26002;
     String host = "127.0.0.1";
@@ -136,4 +138,38 @@ public class ChatFrame extends JFrame {
         this.setVisible(true);
     }
 
+    @Override
+    public void windowOpened(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        System.out.println("1023");
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+        System.out.println("1024");
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+
+    }
 }

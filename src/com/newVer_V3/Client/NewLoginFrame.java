@@ -1,17 +1,21 @@
 package com.newVer_V3.Client;
 
-import com.newVer_V2.Client.FriendList;
-import com.newVer_V2.Client.LoginFrame;
-import com.newVer_V2.DataBaseConnector.Connector;
 import com.newVer_V3.ConfigData.Config;
 import com.newVer_V3.DataBase.UserInfoDB;
+import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.Socket;
 
-public class newLoginFrame extends JFrame implements Config {
+public class NewLoginFrame extends JFrame implements Config {
+    int port = 18000;
+    String ServerIP01 = "127.0.0.1";
+    Socket sendInfoSocket;
     JButton login;
     JButton quit;
     JButton register;
@@ -79,7 +83,7 @@ public class newLoginFrame extends JFrame implements Config {
         login.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                loginAccount();
+                login();
             }
         });
         quit.addActionListener(new ActionListener() {
@@ -92,13 +96,20 @@ public class newLoginFrame extends JFrame implements Config {
     }
 
     //登录、拉取数据库
-    public void loginAccount(){
+    public void login(){
         String userAccount = textField1.getText();
         String passWord = new String(passwordField.getPassword());
         UserInfoDB userInfoDB = new UserInfoDB(userAccount , passWord);
         if(userInfoDB.userInfoJudge()){
+            JSONObject userInfo = new JSONObject();
+            int loginStatus = 1;
+            userInfo.put("userID" , userAccount);
+            userInfo.put("userName" , userInfoDB.getUserName());
+            userInfo.put("loginStatus" , loginStatus);
+            String userInfoStr = userInfo.toString();
             //好友列表标题显示登录用户名字
-            new FriendList(userAccount , userInfoDB.getUserName()).initListUI();
+            new AllFriendList(userInfoStr).initListUI();
+            loginSignal(userInfoStr);
             this.dispose();
             this.setDefaultCloseOperation(1);
         }
@@ -113,6 +124,20 @@ public class newLoginFrame extends JFrame implements Config {
         this.setDefaultCloseOperation(3);
     }
 
+    public void loginSignal(String info){
+        try {
+            sendInfoSocket = new Socket(ServerIP01 , port);
+            OutputStream out = sendInfoSocket.getOutputStream();
+            byte [] infoList = info.getBytes();
+            out.write(infoList.length);
+            out.write(infoList);
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void initUI(){
         setWindows();
         layOut();
@@ -121,8 +146,7 @@ public class newLoginFrame extends JFrame implements Config {
     }
 
     public static void main(String[] args) {
-        LoginFrame loginFrame = new LoginFrame();
-        loginFrame.initUI();
+        new NewLoginFrame().initUI();
     }
 
 }

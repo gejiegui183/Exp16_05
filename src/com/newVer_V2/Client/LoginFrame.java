@@ -8,8 +8,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
-public class LoginFrame extends JFrame implements Config{
+public class LoginFrame extends JFrame implements Config , WindowListener {
     JButton login;
     JButton quit;
     JButton register;
@@ -97,7 +99,7 @@ public class LoginFrame extends JFrame implements Config{
         Connector connector = new Connector(userAccount , passWord);
         if(connector.userJudge()){
             //好友列表标题显示登录用户名字
-            new FriendList(userAccount , connector.getName()).initListUI();
+//            new FriendList(userAccount , connector.getName()).initListUI();
             this.dispose();
             this.setDefaultCloseOperation(1);
         }
@@ -122,5 +124,40 @@ public class LoginFrame extends JFrame implements Config{
     public static void main(String[] args) {
         LoginFrame loginFrame = new LoginFrame();
         loginFrame.initUI();
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        System.out.println("12");
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+        System.out.println("13");
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+
     }
 }

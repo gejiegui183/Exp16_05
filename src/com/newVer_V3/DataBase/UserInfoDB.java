@@ -19,7 +19,7 @@ public class UserInfoDB {
     public UserInfoDB(String userID , String password){
         this.userID = userID;
         this.password = password;
-//        dbInit();
+        dbInit();
     }
 
     public void dbInit(){
