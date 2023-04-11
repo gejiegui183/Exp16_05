@@ -64,4 +64,19 @@ public class UserInfoDB {
         return null;
     }
 
+    public String getFriendName(String friendID){
+        ResultSet rs = null;
+        try {
+            String sqlSent = "select name from clientUser where ID = '" + friendID + "';";
+            rs = statement.executeQuery(sqlSent);
+            while(rs.next()) {
+                return rs.getString("name");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

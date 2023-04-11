@@ -1,17 +1,14 @@
 package com.newVer_V3.Client;
 
-import com.newVer_V2.Client.ChatFrame;
-import com.newVer_V2.DataBaseConnector.Connector;
 import com.newVer_V3.ConfigData.Config;
+import com.newVer_V3.DataBase.UserInfoDB;
 import org.json.JSONObject;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 
 public class AllFriendList extends JFrame implements Config , ActionListener{
     String userInfoJson;
@@ -24,8 +21,6 @@ public class AllFriendList extends JFrame implements Config , ActionListener{
     String friendNum;
     SystemTray systemTray;
     TrayIcon trayIcon;
-    int onlineCount;
-    String friendName;
     String friendID;
 
     public AllFriendList() {
@@ -148,9 +143,13 @@ public class AllFriendList extends JFrame implements Config , ActionListener{
                         //getText() 的意思是：返回数据窗口控件中 悬浮在当前行列之上的
                         friendNum=((JLabel)e.getSource()).getText();
                         friendID = "1000" + friendNum;
-                        Connector connector = new Connector(friendID);
-                        connector.dbConnect();
-                        startChatFrame(connector.getName(), userID , friendID);
+                        UserInfoDB userInfoDB = new UserInfoDB();
+                        JSONObject chatTag = new JSONObject();
+                        chatTag.put("userID" , userID);
+                        chatTag.put("targetID" , friendID);
+                        chatTag.put("targetName" , userInfoDB.getFriendName(friendID));
+                        String chatTagStr = chatTag.toString();
+                        startChatFrame(chatTagStr);
                     }
                 }
 
@@ -196,7 +195,6 @@ public class AllFriendList extends JFrame implements Config , ActionListener{
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public void initListUI(){
@@ -209,9 +207,8 @@ public class AllFriendList extends JFrame implements Config , ActionListener{
 
     }
 
-    public void startChatFrame(String friendName ,String userID , String reciverID){
-        new ChatFrame(friendName ,userID , reciverID).init();
+    public void startChatFrame(String tag){
+        new friendChatPanel(tag).init();
     }
-
 
 }

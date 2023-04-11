@@ -1,7 +1,5 @@
 package com.newVer_V2.Client;
 
-import com.company.Client.InfoCheck;
-import com.company.Client.Register;
 import com.newVer_V2.DataBaseConnector.Connector;
 
 import javax.swing.*;
