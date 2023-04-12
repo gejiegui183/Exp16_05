@@ -2,6 +2,7 @@ package com.newVer_V3.ConfigData;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
 
 public interface Config {
 
@@ -19,6 +20,6 @@ public interface Config {
 
     public static Image icon = new ImageIcon("./Image/QQ_64.png").getImage();
     public static Image trayIconImage = new ImageIcon("./Image/QQ_16.png").getImage();
-
+    HashMap<String , String> onLineList = new HashMap<>();
 
 }

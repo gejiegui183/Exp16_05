@@ -9,6 +9,7 @@ import java.awt.event.*;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class AllFriendList extends JFrame implements Config , ActionListener{
     String userInfoJson;
@@ -17,6 +18,7 @@ public class AllFriendList extends JFrame implements Config , ActionListener{
     JFrame frame;
     String host = "127.0.0.1";
     int port = 18000;
+    int port2 = 18001;
     Socket socket;
     String friendNum;
     SystemTray systemTray;
@@ -179,7 +181,6 @@ public class AllFriendList extends JFrame implements Config , ActionListener{
         }
         JScrollPane friendList = new JScrollPane(friendPanel);
         frame.add(friendList , BorderLayout.CENTER);
-
         frame.setVisible(true);
     }
 
@@ -197,8 +198,44 @@ public class AllFriendList extends JFrame implements Config , ActionListener{
         }
     }
 
+    public void signalSend(){
+        try{
+            socket = new Socket(host , port);
+            if (!socket.getKeepAlive()) {
+                socket.setKeepAlive(true);
+            }
+            if (!socket.getOOBInline()) {
+                socket.setOOBInline(true);
+            }
+            OutputStream signalOut = socket.getOutputStream();
+            JSONObject js = new JSONObject();
+            js.put("loginStatus" , 1);
+            js.put("userName" , userName);
+            js.put("userID" , userID);
+            String signal = js.toString();
+            new Thread(() -> {
+                while (true) {
+                    try {
+                        Thread.sleep(2000);
+                        byte [] data = signal.getBytes();
+                        signalOut.write(data.length);
+                        signalOut.write(data);
+                        signalOut.flush();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println("flush<-Friend");
+                }
+            }).start();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public void initListUI(){
         setWindows();
+        signalSend();
         layOut();
     }
 

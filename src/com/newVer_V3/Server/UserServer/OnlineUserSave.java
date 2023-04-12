@@ -1,6 +1,7 @@
 package com.newVer_V3.Server.UserServer;
 
 
+import com.newVer_V3.ConfigData.Config;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -11,8 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
-public class OnlineUserSave extends Thread{
-    HashMap<String , String> onLineList = new HashMap<>();
+public class OnlineUserSave extends Thread implements Config {
     ServerSocket userSaver;
 
     public OnlineUserSave(ServerSocket serverSocket){
@@ -25,7 +25,7 @@ public class OnlineUserSave extends Thread{
         while (true) {
             java.util.Date date = new Date();
             SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-            System.out.println(dateFormat.format(date) + "正在监听客户端连接情况<-OnlineUserSave");
+            System.out.println(dateFormat.format(date) + "#Listening connection<-OnlineUserSave");
             try {
                 accept = userSaver.accept();
                 InputStream in = accept.getInputStream();
@@ -38,12 +38,13 @@ public class OnlineUserSave extends Thread{
                 String userName = (String) js.get("userName");
                 String userID = (String) js.get("userID");
                 if (loginStatus == 1) {
+                    System.out.println(userID + "#<-OnlineUserSave/22");
                     onLineList.put(userID , userName);
                 }
                 else if(loginStatus == 2){
                     onLineList.remove(userID);
                 }
-                System.out.println(dateFormat.format(date) + "当前连接用户数量为："+ onLineList.size() + "<-OnlineUserSave");
+                System.out.println(dateFormat.format(date) + "#UserCount："+ onLineList.size() + "<-OnlineUserSave");
             } catch (IOException e) {
                 e.printStackTrace();
             }

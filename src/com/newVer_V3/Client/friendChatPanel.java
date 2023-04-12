@@ -130,9 +130,6 @@ public class friendChatPanel extends JFrame implements Config {
         northPanel.updateUI();
     }
 
-    public void messageCheck(){
-
-    }
 
     public void init(){
         setWindows();

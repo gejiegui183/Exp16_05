@@ -133,6 +133,7 @@ public class NewLoginFrame extends JFrame implements Config {
             out.write(infoList);
             out.flush();
             out.close();
+            sendInfoSocket.shutdownOutput();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -21,10 +21,10 @@ public class UserConnServer {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(dateFormat.format(date) + "用户信息服务器开启<-UserConnServer");
-        System.out.println(dateFormat.format(date) + "客户端监听中<-UserConnServer");
+        System.out.println(dateFormat.format(date) + "#MessageServer is start<-UserConnServer");
+        System.out.println(dateFormat.format(date) + "#Listening Client<-UserConnServer");
         OnlineUserSave onlineUserSave = new OnlineUserSave(userInfoServer);
         onlineUserSave.start();
-        System.out.println(dateFormat.format(date) + "用户信息接收器启动<-UserConnServer");
+        System.out.println(dateFormat.format(date) + "#OnlineUserSave is started<-UserConnServer");
     }
 }
