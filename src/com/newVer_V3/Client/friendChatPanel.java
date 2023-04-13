@@ -108,6 +108,7 @@ public class friendChatPanel extends JFrame implements Config {
             out.write(msgList);
             out.flush();
             out.close();
+            msgSender.shutdownOutput();
         } catch (IOException e) {
             e.printStackTrace();
         }

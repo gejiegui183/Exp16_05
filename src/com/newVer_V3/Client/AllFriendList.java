@@ -193,6 +193,7 @@ public class AllFriendList extends JFrame implements Config , ActionListener{
             out.write(signal);
             out.flush();
             out.close();
+            socket.shutdownOutput();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -224,7 +225,6 @@ public class AllFriendList extends JFrame implements Config , ActionListener{
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    System.out.println("flush<-Friend");
                 }
             }).start();
         }
