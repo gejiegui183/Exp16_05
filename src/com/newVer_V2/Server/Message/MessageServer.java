@@ -1,6 +1,6 @@
 package com.newVer_V2.Server.Message;
 
-import com.mysql.cj.protocol.Message;
+import java.sql.*;
 import com.newVer_V2.Client.ChatFrame;
 
 import java.io.IOException;

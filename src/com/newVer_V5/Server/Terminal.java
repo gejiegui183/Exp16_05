@@ -1,28 +1,30 @@
-package com.newVer_V4.Server;
+package com.newVer_V5.Server;
 
-import com.newVer_V4.Server.Connection.UserConnector;
+import com.newVer_V2.Server.Message.MessageServer;
+import com.newVer_V5.Server.ConnectServer.ClientConnector;
+import com.newVer_V5.Server.MessageServer.ClientMessage;
 
 public class Terminal {
 
-
-    public void logoPrint(){
+    public void log(){
         System.out.println("welcome to");
         System.out.println("   ____  ____  ________          __  _____                          \n" +
                 "  / __ \\/ __ \\/ ____/ /_  ____ _/ /_/ ___/___  ______   _____  _____\n" +
                 " / / / / / / / /   / __ \\/ __ `/ __/\\__ \\/ _ \\/ ___/ | / / _ \\/ ___/\n" +
                 "/ /_/ / /_/ / /___/ / / / /_/ / /_ ___/ /  __/ /   | |/ /  __/ /    \n" +
                 "\\___\\_\\___\\_\\____/_/ /_/\\__,_/\\__//____/\\___/_/    |___/\\___/_/     \n" +
-                "                                                                    " + "ver_1.4.4");
+                "                                                                    " + "ver_0.5.0");
 
     }
 
     public void serverStarter(){
-        new UserConnector().serverInit();
+        new ClientConnector().initServer();
+        new ClientMessage().initServer();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args)  {
         Terminal terminal = new Terminal();
-        terminal.logoPrint();
+        terminal.log();
         terminal.serverStarter();
     }
 }

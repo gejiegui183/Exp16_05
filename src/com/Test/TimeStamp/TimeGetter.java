@@ -1,14 +1,13 @@
-package com.newVer_V4.TimeGet;
+package com.Test.TimeStamp;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class TimeStamp {
+public class TimeGetter {
 
-    public String getCurrentTime(){
+    public String getTime(){
         java.util.Date date = new Date();
         SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         return dateFormat.format(date);
-
     }
 }
