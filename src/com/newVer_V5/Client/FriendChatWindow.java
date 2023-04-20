@@ -1,6 +1,5 @@
 package com.newVer_V5.Client;
 
-import com.newVer_V5.DataBase.MessageCheck;
 import com.newVer_V5.InfoData.Config;
 import org.json.JSONObject;
 
@@ -9,6 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
@@ -137,7 +137,7 @@ public class FriendChatWindow extends JFrame implements Config {
         js.put("userID" , userID);
         js.put("friendID" , friendID);
         String pak = js.toString();
-        new MessageGetter(northPanel , pak).start();
+        new MessageReciver(host , msgPort).start();
     }
 
     public void init(){
@@ -145,61 +145,60 @@ public class FriendChatWindow extends JFrame implements Config {
         layOut();
         messagePanelBackGround();
         buttonSet();
-//        msgFeedBack();
+        msgFeedBack();
         this.setVisible(true);
     }
 }
 
-class MessageGetter extends Thread{
-    JPanel panel;
-    String info;
 
-    public MessageGetter(){}
+class MessageReciver extends Thread{
+    Socket reciver;
+    int port;
+    String IP;
 
-    public MessageGetter(JPanel panel , String info){
-        this.panel = panel;
-        this.info = info;
+    MessageReciver(String IP , int port){
+        this.IP = IP;
+        this.port = port;
+        init();
+    }
+
+    public void init(){
+        try {
+            this.reciver = new Socket(IP , port);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void run() {
-        String currentTime = null;
-        String sendTime = null;
-        String content = null;
-        MessageCheck messageCheck = new MessageCheck();
-        String reciver = messageCheck.messageGetter(info);
-        while (reciver != null) {
-            JSONObject js = new JSONObject(reciver);
-            sendTime = (String) js.get("sendTime");
-            content = (String) js.get("content");
-            System.out.println(content + " <- as");
-            try {
-                Thread.sleep(7000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        System.out.println("start");
+        InputStream in = null;
+        try {
+            in = reciver.getInputStream ();
+        } catch (IOException e) {
+            throw new RuntimeException (e);
+        }
+        try {
+            // 接收消息 循环
+            while(true){
+                // 接收消息
+                byte[] bytes = new byte[1024];
+                int len = in.read (bytes);
+                String message = new String (bytes, 0, len);
+                System.out.println (message);
+                // 解析消息
+                // 长度-消息内容
+                String[] split = message.split ("-");
+                String length = split[0];
+                String msgContent = split[1];
+                System.out.println ("收到消息：" + msgContent);
+                // 显示到界面上 考虑界面上当前聊天的对象不是消息发送的时候 如何处理
+//                chatUI.messageArea.append ("\n" + msgContent);
+
             }
-        }
-        if(sendTime != null && !sendTime.equals(currentTime)){
-            System.out.println(content);
-            msgDisplay(content , FlowLayout.LEFT);
+        } catch (IOException e) {
+            throw new RuntimeException (e);
         }
     }
-
-    public void msgDisplay(String message , int align){
-        JLabel msgLable = new JLabel(message , align);
-        msgLable.setForeground(Color.BLACK);
-        msgLable.setBackground(Color.cyan);
-        msgLable.setSize(50 , 25);
-        msgLable.setOpaque(true);
-
-        JPanel itemPanel = new JPanel();
-        itemPanel.setPreferredSize(new Dimension(660 , 25));
-        itemPanel.add(msgLable);
-
-        FlowLayout layout = (FlowLayout) itemPanel.getLayout();
-        layout.setAlignment(align);
-        panel.add(itemPanel);
-        panel.updateUI();
-    }
-
 }
