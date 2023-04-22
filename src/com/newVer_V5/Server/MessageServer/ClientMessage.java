@@ -7,7 +7,7 @@ import java.net.ServerSocket;
 
 public class ClientMessage {
     ServerSocket serverSocket;
-    int port = 9001;
+    int port = 25000;
 
     public ClientMessage(){}
 
@@ -15,8 +15,7 @@ public class ClientMessage {
         System.out.println(new TimeGetter().getTime() + "MessageSaveServer is started <- ClientMessage");
         try {
             serverSocket = new ServerSocket(port);
-                new InfoGetter(serverSocket).start();
-
+            new InfoGetter(serverSocket).start();
         } catch (IOException e) {
             e.printStackTrace();
         }

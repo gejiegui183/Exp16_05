@@ -19,7 +19,7 @@ public class FriendsListWindow extends JFrame implements Config {
     String userID;
     JFrame frame;
     String host = "127.0.0.1";
-    int port = 9000;
+    int port = 24999;
     Socket socket;
     String friendNum;
     SystemTray systemTray;

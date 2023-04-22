@@ -8,7 +8,7 @@ import java.net.ServerSocket;
 
 public class ClientConnector {
     ServerSocket serverSocket;
-    int port = 9000;
+    int port = 24999;
 
     public ClientConnector(){}
 
@@ -17,8 +17,9 @@ public class ClientConnector {
         try {
             serverSocket = new ServerSocket(port);
             System.out.println(new TimeGetter().getTime() + "heartBeatListener is running <- InfoGetter");
-
-            new InfoGetter(serverSocket).start();
+            while (true) {
+                new InfoGetter(serverSocket).start();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

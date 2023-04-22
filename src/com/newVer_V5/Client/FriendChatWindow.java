@@ -17,7 +17,7 @@ import java.util.Date;
 public class FriendChatWindow extends JFrame implements Config {
     String JSInfo;
     Socket msgSender;
-    int msgPort = 9001;
+    int msgPort = 25000;
     String host = "127.0.0.1";
     String friendName;
     String userID;
@@ -107,11 +107,12 @@ public class FriendChatWindow extends JFrame implements Config {
             out.write(msgList.length);
             out.write(msgList);
             out.flush();
-            out.close();
+//            out.close();
 //            msgSender.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        new MessageReciver(msgSender).start();
         textField.setText("");
     }
 
@@ -132,73 +133,38 @@ public class FriendChatWindow extends JFrame implements Config {
         northPanel.updateUI();
     }
 
-    public void msgFeedBack(){
-        JSONObject js = new JSONObject();
-        js.put("userID" , userID);
-        js.put("friendID" , friendID);
-        String pak = js.toString();
-        new MessageReciver(host , msgPort).start();
-    }
-
     public void init(){
         setWindows();
         layOut();
         messagePanelBackGround();
         buttonSet();
-        msgFeedBack();
         this.setVisible(true);
     }
 }
 
 
 class MessageReciver extends Thread{
-    Socket reciver;
-    int port;
-    String IP;
+    Socket socket;
 
-    MessageReciver(String IP , int port){
-        this.IP = IP;
-        this.port = port;
-        init();
-    }
-
-    public void init(){
-        try {
-            this.reciver = new Socket(IP , port);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public MessageReciver(Socket socket){
+        this.socket = socket;
     }
 
     @Override
     public void run() {
-        System.out.println("start");
-        InputStream in = null;
-        try {
-            in = reciver.getInputStream ();
-        } catch (IOException e) {
-            throw new RuntimeException (e);
-        }
-        try {
-            // 接收消息 循环
-            while(true){
-                // 接收消息
-                byte[] bytes = new byte[1024];
-                int len = in.read (bytes);
-                String message = new String (bytes, 0, len);
-                System.out.println (message);
-                // 解析消息
-                // 长度-消息内容
-                String[] split = message.split ("-");
-                String length = split[0];
-                String msgContent = split[1];
-                System.out.println ("收到消息：" + msgContent);
-                // 显示到界面上 考虑界面上当前聊天的对象不是消息发送的时候 如何处理
-//                chatUI.messageArea.append ("\n" + msgContent);
-
+        InputStream in  = null;
+        while (true) {
+            try {
+                in = socket.getInputStream();
+                int msgLen = in.read();
+                byte [] data = new byte[msgLen];
+                in.read(data);
+                String msg = new String(data);
+                System.out.println(msg + "<<ClientMsg");
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            throw new RuntimeException (e);
+
         }
     }
 }

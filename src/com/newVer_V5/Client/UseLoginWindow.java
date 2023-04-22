@@ -17,7 +17,7 @@ import java.net.Socket;
 public class UseLoginWindow extends JFrame implements Config {
     Socket socket;
     String host = "127.0.0.1";
-    int port = 9000;
+    int port = 24999;
     JButton login;
     JButton quit;
     JButton register;

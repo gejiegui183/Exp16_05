@@ -17,14 +17,18 @@ public class Terminal {
 
     }
 
-    public void serverStarter(){
-        new ClientConnector().initServer();
-        new ClientMessage().initServer();
+    public void serverStarter1(){
+        new Thread(() -> {
+            new ClientConnector().initServer();
+        }).start();
+        new Thread(() -> {
+            new ClientMessage().initServer();
+        }).start();
     }
 
     public static void main(String[] args)  {
         Terminal terminal = new Terminal();
         terminal.log();
-        terminal.serverStarter();
+        terminal.serverStarter1();
     }
 }
