@@ -15,7 +15,9 @@ public class ClientMessage {
         System.out.println(new TimeGetter().getTime() + "MessageSaveServer is started <- ClientMessage");
         try {
             serverSocket = new ServerSocket(port);
-            new InfoGetter(serverSocket).start();
+            while (true) {
+                new InfoGetter(serverSocket).start();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

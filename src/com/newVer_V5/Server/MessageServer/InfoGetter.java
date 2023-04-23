@@ -41,18 +41,17 @@ public class InfoGetter extends Thread implements Config {
                 String content = (String) js.get("content");
                 String sendTime = (String) js.get("sendTime");
                 InfoCheck info = new InfoCheck();
-                String sender = info.getFriendName(userID);
+                String sender = info.getFriendName(friendID);
                 if(!msgServerLink.containsKey(userID)){
                     msgServerLink.put(userID , accept);
+                    System.out.println(msgServerLink.size() + "<<ClientMessage Debug3");
                 }
                 String reciveMsg = sendTime + "##" + sender + "##" + content;
-//                Socket reciver = userSocket.get("10001");
                 System.out.println(accept + "<<ClientMessage Debug2");
                 byte [] reciveMessage = reciveMsg.getBytes();
-
-//                OutputStream out = userSocket.get("10001").getOutputStream();
-                OutputStream out = accept.getOutputStream();
-
+                Socket newAccpet = msgServerLink.get(friendID);
+                System.out.println(newAccpet);
+                OutputStream out = newAccpet.getOutputStream();
                 out.write(reciveMessage.length);
                 out.write(reciveMessage);
                 out.flush();
