@@ -23,4 +23,10 @@ public interface Config {
     HashMap<String , String> onLineList = new HashMap<>();
     HashMap<String , Socket> userSocket = new HashMap<>();
     HashMap<String , Socket> msgServerLink = new HashMap<>();
+    HashMap<String , Socket> videoRequire = new HashMap<>();
+
+    //msgType.0:心跳包请求
+    //msgType.1:用户信息
+    //msgType.2:用户消息内容
+    //msgType.3:视频通话申请
 }

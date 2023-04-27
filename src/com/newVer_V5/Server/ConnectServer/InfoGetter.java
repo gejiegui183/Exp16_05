@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -45,6 +46,15 @@ public class InfoGetter extends Thread implements Config {
                     if(onLineList.containsKey(userID) && loginStatus == 0){
                         onLineList.remove(userID);
                         userSocket.remove(userID);
+                    }
+                }
+                if(msgType == 2){
+                    String friendID = (String)js.getString("friendID");
+                    if(userSocket.containsKey(friendID)){
+                        Socket require = userSocket.get(friendID);
+                        OutputStream out = require.getOutputStream();
+                        out.write(1);
+                        out.flush();
                     }
                 }
             }

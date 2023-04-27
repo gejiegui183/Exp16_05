@@ -1,19 +1,16 @@
-package com.newVer_V5.Server.ConnectServer;
+package com.newVer_V5.Server.RequireServer;
 
-import com.newVer_V4.Server.Connection.InfoProcess;
 import com.newVer_V5.Time.TimeGetter;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 
-public class ClientConnector {
+public class ClientRequire {
+    int port = 25001;
     ServerSocket serverSocket;
-    int port = 24999;
-
-    public ClientConnector(){}
 
     public void initServer(){
-        System.out.println(new TimeGetter().getTime() + "#ConnectServer is started <- ClientConnector");
+        System.out.println(new TimeGetter().getTime() + "#RequireServer is start <-ClientRequire");
         try {
             serverSocket = new ServerSocket(port);
             while (true) {

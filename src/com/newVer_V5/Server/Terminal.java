@@ -3,6 +3,7 @@ package com.newVer_V5.Server;
 import com.newVer_V2.Server.Message.MessageServer;
 import com.newVer_V5.Server.ConnectServer.ClientConnector;
 import com.newVer_V5.Server.MessageServer.ClientMessage;
+import com.newVer_V5.Server.RequireServer.ClientRequire;
 
 public class Terminal {
 
@@ -23,6 +24,9 @@ public class Terminal {
         }).start();
         new Thread(() -> {
             new ClientMessage().initServer();
+        }).start();
+        new Thread(() -> {
+            new ClientRequire().initServer();
         }).start();
     }
 
