@@ -1,6 +1,6 @@
 package com.newVer_V5.Client;
 
-import com.Test2.WebcamViewerExample;
+import com.newVer_V5.DataBase.InfoCheck;
 import com.newVer_V5.InfoData.Config;
 import com.newVer_V5.cam.CamStart;
 import org.json.JSONObject;
@@ -48,12 +48,12 @@ public class FriendChatWindow extends JFrame implements Config {
 
     public void videoSocketInit(){
         try {
-            msgSender = new Socket(host , msgPort);
+            require = new Socket(host , videoPort);
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        videoRequireCreater();
-//        new VideoRecive(require , friendName , userID).start();
+        videoRequireCreater();
+//        new VideoRecive(require , friendName).start();
     }
 
     public void setWindows(){
@@ -117,6 +117,7 @@ public class FriendChatWindow extends JFrame implements Config {
         msgDisplay(chat , FlowLayout.RIGHT);
         String msgJS = msg.toString();
         try {
+            msgSender = new Socket(host , msgPort);
             OutputStream out = msgSender.getOutputStream();
             byte [] msgList = msgJS.getBytes();
             out.write(msgList.length);
@@ -127,7 +128,7 @@ public class FriendChatWindow extends JFrame implements Config {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        new MessageReciver(msgSender , northPanel).start();
+        new MessageReciver(msgSender , northPanel , friendName).start();
         textField.setText("");
     }
 
@@ -211,14 +212,11 @@ public class FriendChatWindow extends JFrame implements Config {
 
     }
 
-    //视频聊天前先发送视频申请
     public void requireSend(){
         JSONObject js = new JSONObject();
         js.put("userID" , userID);
         js.put("friendID" , friendID);
-        js.put("sendTime" , "null");
         js.put("msgType" , 3);
-        js.put("content" , "1");
         String pak = js.toString();
         try {
             OutputStream out = require.getOutputStream();
@@ -246,7 +244,6 @@ public class FriendChatWindow extends JFrame implements Config {
         videoSocketInit();
         setWindows();
         layOut();
-//        new VideoRecive(require , friendName , userID).start();
         messagePanelBackGround();
         buttonSet();
         this.setVisible(true);
@@ -257,10 +254,12 @@ public class FriendChatWindow extends JFrame implements Config {
 class MessageReciver extends Thread{
     Socket socket;
     JPanel newPanel;
+    String friendName;
 
-    public MessageReciver(Socket socket , JPanel newPanel){
+    public MessageReciver(Socket socket , JPanel newPanel , String friendName){
         this.socket = socket;
         this.newPanel = newPanel;
+        this.friendName = friendName;
     }
 
     @Override
@@ -273,7 +272,19 @@ class MessageReciver extends Thread{
                 byte [] data = new byte[msgLen];
                 in.read(data);
                 String msg = new String(data);
-                msgDisplay(msg , FlowLayout.LEFT);
+                JSONObject js = new JSONObject(msg);
+                int msgType = (Integer) js.get("msgType");
+                if(msgType == 2){
+                    String content = (String)js.get("content");
+                    String sendTime = (String)js.get("sendTime");
+                    String friendID = (String) js.get("friendID");
+                    String friendName = new InfoCheck().getFriendName(friendID);
+                    String reply = sendTime + "##" + friendName + "##" + content;
+                    msgDisplay(reply , FlowLayout.LEFT);
+                }
+                if(msgType == 3){
+                    videoAsk();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -296,16 +307,68 @@ class MessageReciver extends Thread{
         newPanel.add(itemPanel);
         newPanel.updateUI();
     }
+
+    public void videoAsk(){
+        JFrame tipWindow = new JFrame();
+        tipWindow.setTitle("系统提示");
+        tipWindow.setSize(300 , 200);
+        tipWindow.setLocationRelativeTo(null);
+        JPanel panel1 = new JPanel();
+        panel1.setPreferredSize(new Dimension(220 , 100));
+        JLabel label = new JLabel(friendName + "想与你视频通话，是否同意？");
+        label.setSize(200 , 90);
+        panel1.add(label);
+
+        JPanel panel2 = new JPanel();
+        panel2.setPreferredSize(new Dimension(220 , 35));
+        JButton jb1 = new JButton("同意");
+        jb1.setBounds(70 , 40 , 70 , 30);
+        JButton jb2 = new JButton("拒绝");
+        jb1.setBounds(160 , 40 , 20 , 30);
+        panel2.add(jb1);
+        panel2.add(jb2);
+        tipWindow.add(panel1 , BorderLayout.NORTH);
+        tipWindow.add(panel2 , BorderLayout.SOUTH);
+        tipWindow.setDefaultCloseOperation(1);
+        tipWindow.setVisible(true);
+        tipWindow.setResizable(false);
+        jb1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+//                requireReply(1);
+//                videoStart();
+                tipWindow.dispose();
+                tipWindow.setDefaultCloseOperation(1);
+            }
+        });
+        jb2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+//                requireReply(0);
+                tipWindow.dispose();
+                tipWindow.setDefaultCloseOperation(1);
+            }
+        });
+    }
+
+    public void requireReply(int reply){
+        try {
+            OutputStream out = socket.getOutputStream();
+            out.write(reply);
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
 
 class VideoRecive extends Thread{
     Socket socket;
     int videoStatus = 0;
     JFrame frame;
-    String friendName , userName;
-    String userID , friendID;
+    String friendName;
 
-    public VideoRecive(Socket socket , String friendName , String userID) {
+    public VideoRecive(Socket socket , String friendName) {
         this.socket = socket;
         this.friendName = friendName;
     }
@@ -382,15 +445,9 @@ class VideoRecive extends Thread{
     }
 
     public void requireReply(int reply){
-        JSONObject js = new JSONObject();
-        js.put("msgType" , 3);
-        js.put("userID" , userID);
-        js.put("friendID" , friendID);
-        js.put("reply" , reply);
-        String pak = js.toString();
         try {
             OutputStream out = socket.getOutputStream();
-            out.write(pak.getBytes());
+            out.write(reply);
             out.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -399,7 +456,6 @@ class VideoRecive extends Thread{
 
     public void videoStart(){
         CamStart camStart = new CamStart(friendName);
-        camStart.getCam();
-        camStart.setWindow();
+        camStart.init();
     }
 }

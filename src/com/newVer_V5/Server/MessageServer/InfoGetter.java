@@ -46,8 +46,7 @@ public class InfoGetter extends Thread implements Config {
                 if(!msgServerLink.containsKey(userID)){
                     msgServerLink.put(userID , accept);
                 }
-                String reciveMsg = sendTime + "##" + sender + "##" + content;
-                byte [] reciveMessage = reciveMsg.getBytes();
+                byte [] reciveMessage = message.getBytes();
                 Socket newAccpet = msgServerLink.get(friendID);
                 System.out.println(newAccpet);
                 OutputStream out = newAccpet.getOutputStream();

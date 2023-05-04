@@ -1,28 +1,30 @@
-package com.newVer_V5.cam;
+package com.Test.newTest;
 
 import com.github.sarxos.webcam.*;
+import com.newVer_V5.cam.CamStart;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 
-public class CamStart extends JFrame implements Runnable, WebcamListener, WindowListener, Thread.UncaughtExceptionHandler, ItemListener, WebcamDiscoveryListener {
+public class Client extends JFrame implements Runnable, WebcamListener, WindowListener, Thread.UncaughtExceptionHandler, ItemListener, WebcamDiscoveryListener{
     JFrame videoFrame;
     WebcamPanel northPanel;
     JPanel southPanel;
     static Webcam webcam = null;
+    WebcamPanel panel = null;
     WebcamPicker picker = null;
     String windowTitle;
     String host = "127.0.0.1";
-    int port = 25001;
+    int port = 30000;
     Socket socket;
 
-    public CamStart(String windowTitle){
+    public Client(String windowTitle){
         this.windowTitle = windowTitle;
     }
 
@@ -107,7 +109,7 @@ public class CamStart extends JFrame implements Runnable, WebcamListener, Window
             });
         }
         webcam.setViewSize(WebcamResolution.VGA.getSize());
-        webcam.addWebcamListener(CamStart.this);
+        webcam.addWebcamListener(Client.this);
         northPanel = new WebcamPanel(webcam , false);
         northPanel.setFPSDisplayed(true);
         Thread t = new Thread(){
@@ -119,38 +121,40 @@ public class CamStart extends JFrame implements Runnable, WebcamListener, Window
         t.setDaemon(true);
         t.setUncaughtExceptionHandler(this);
         t.start();
-        new Thread(() -> {
-            imageFlush();
-        }).start();
     }
 
     public void imageFlush(){
-        while (true) {
             try {
-                Thread.sleep(33);
+                Thread.sleep(1000);
                 BufferedImage image = webcam.getImage();
                 OutputStream out = socket.getOutputStream();
-                DataOutputStream flue = new DataOutputStream(out);
-                int imageWidth = image.getWidth();
-                int imageHeight = image.getHeight();
-                flue.writeInt(imageWidth);
-                flue.writeInt(imageHeight);
-                for (int i = 0; i < imageWidth; i++) {
-                    for (int j = 0; j < imageHeight; j++) {
-                        flue.writeInt(image.getRGB(i , j));
+                while (true) {
+                    DataOutputStream flue = new DataOutputStream(out);
+                    int imageWidth = image.getWidth();
+                    int imageHeight = image.getHeight();
+                    flue.writeInt(imageWidth);
+                    flue.writeInt(imageHeight);
+                    for (int i = 0; i < imageWidth; i++) {
+                        for (int j = 0; j < imageHeight; j++) {
+                            flue.writeInt(image.getRGB(i , j));
+                        }
                     }
+
                 }
             }
             catch (Exception e){
                 e.printStackTrace();
             }
-        }
+
     }
 
     public void init(){
         socketInit();
         getCam();
         setWindow();
+        new Thread(() -> {
+                imageFlush();
+        }).start();
     }
 
 
@@ -195,6 +199,11 @@ public class CamStart extends JFrame implements Runnable, WebcamListener, Window
                 tipWindow.setDefaultCloseOperation(1);
             }
         });
+    }
+
+    public static void main(String[] args) {
+        Client c = new Client("test");
+        c.init();
     }
 
 
