@@ -48,10 +48,12 @@ public class InfoGetter extends Thread implements Config {
                         out.write(askMsg.length);
                         out.write(askMsg);
                         out.flush();//发送视频请求
-                        System.out.println(new TimeGetter().getTime() + "#videoRequire is sended from:" + userID1 + "reciver:" + friendID);
+                        System.out.println(new TimeGetter().getTime() + "#videoRequire is sended from:" + userID1 + "reciver:" + friendID + "<<Debug01");
                         InputStream requireAns = requireAsk.getInputStream();
-//                        System.out.println("<<debug________00");
-//                        System.out.println(requireAns.read() + "<< debug");
+//                        int requireLen = requireAns.read();
+//                        byte [] reqMsg = new byte[requireLen];
+//                        in.read(reqMsg);
+//                        String requireMsg = new String(reqMsg);
                         if(requireAns.read() == 0){
                             System.out.println("用户已拒绝 << debug");
                         }

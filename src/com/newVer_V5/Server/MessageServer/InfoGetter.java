@@ -40,6 +40,7 @@ public class InfoGetter extends Thread implements Config {
                 String friendID = (String) js.get("friendID");
                 String content = (String) js.get("content");
                 String sendTime = (String) js.get("sendTime");
+                int msgType = (Integer) js.get("msgType");
                 InfoCheck info = new InfoCheck();
                 String sender = info.getFriendName(friendID);
                 if(!msgServerLink.containsKey(userID)){
@@ -57,7 +58,5 @@ public class InfoGetter extends Thread implements Config {
                 e.printStackTrace();
             }
         }
-
-
     }
 }

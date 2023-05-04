@@ -4,6 +4,7 @@ import com.newVer_V2.Server.Message.MessageServer;
 import com.newVer_V5.Server.ConnectServer.ClientConnector;
 import com.newVer_V5.Server.MessageServer.ClientMessage;
 import com.newVer_V5.Server.RequireServer.ClientRequire;
+import com.newVer_V5.Server.VideoServer.ClientVideoServer;
 
 public class Terminal {
 
@@ -25,9 +26,9 @@ public class Terminal {
         new Thread(() -> {
             new ClientMessage().initServer();
         }).start();
-        new Thread(() -> {
-            new ClientRequire().initServer();
-        }).start();
+//        new Thread(() -> {
+//            new ClientVideoServer().initServer();
+//        }).start();
     }
 
     public static void main(String[] args)  {

@@ -15,6 +15,7 @@ public class ClientRequire {
             serverSocket = new ServerSocket(port);
             while (true) {
                 new InfoGetter(serverSocket).start();
+//                new VideoFlue(serverSocket).start();
             }
         } catch (IOException e) {
             e.printStackTrace();

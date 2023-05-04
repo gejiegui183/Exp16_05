@@ -1,11 +1,13 @@
-package com.newVer_V5.cam;
+package com.Test3.T1;
 
 import com.github.sarxos.webcam.*;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 
-public class CamStart extends JFrame implements Runnable, WebcamListener, WindowListener, Thread.UncaughtExceptionHandler, ItemListener, WebcamDiscoveryListener {
+public class CamStartTest extends JFrame implements Runnable, WebcamListener, WindowListener, Thread.UncaughtExceptionHandler, ItemListener, WebcamDiscoveryListener {
     JFrame videoFrame;
     WebcamPanel northPanel;
     JPanel southPanel;
@@ -13,7 +15,7 @@ public class CamStart extends JFrame implements Runnable, WebcamListener, Window
     WebcamPicker picker = null;
     String windowTitle;
 
-    public CamStart(String windowTitle){
+    public CamStartTest(String windowTitle){
         this.windowTitle = windowTitle;
     }
 
@@ -90,7 +92,7 @@ public class CamStart extends JFrame implements Runnable, WebcamListener, Window
             });
         }
         webcam.setViewSize(WebcamResolution.VGA.getSize());
-        webcam.addWebcamListener(CamStart.this);
+        webcam.addWebcamListener(CamStartTest.this);
         northPanel = new WebcamPanel(webcam , false);
         northPanel.setFPSDisplayed(true);
         Thread t = new Thread(){
@@ -102,6 +104,10 @@ public class CamStart extends JFrame implements Runnable, WebcamListener, Window
         t.setDaemon(true);
         t.setUncaughtExceptionHandler(this);
         t.start();
+
+        new Thread(() -> {
+            videoEncode();
+        }).start();
     }
 
     public void shutDownTip(){
@@ -145,6 +151,24 @@ public class CamStart extends JFrame implements Runnable, WebcamListener, Window
                 tipWindow.setDefaultCloseOperation(1);
             }
         });
+    }
+
+    public void videoEncode(){
+        while (true) {
+            try {
+                Thread.sleep(33);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            BufferedImage image = webcam.getImage();
+            int matrix[][] = new int [image.getWidth()][image.getHeight()];
+            for (int i = 0; i < image.getWidth(); i++) {
+                for (int j = 0; j < image.getHeight(); j++) {
+                    matrix[i][j] = image.getRGB(i , j);
+                }
+            }
+
+        }
     }
 
 

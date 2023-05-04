@@ -48,12 +48,12 @@ public class FriendChatWindow extends JFrame implements Config {
 
     public void videoSocketInit(){
         try {
-            require = new Socket(host , videoPort);
+            msgSender = new Socket(host , msgPort);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        videoRequireCreater();
-        new VideoRecive(require , friendName).start();
+//        videoRequireCreater();
+//        new VideoRecive(require , friendName , userID).start();
     }
 
     public void setWindows(){
@@ -117,7 +117,6 @@ public class FriendChatWindow extends JFrame implements Config {
         msgDisplay(chat , FlowLayout.RIGHT);
         String msgJS = msg.toString();
         try {
-            msgSender = new Socket(host , msgPort);
             OutputStream out = msgSender.getOutputStream();
             byte [] msgList = msgJS.getBytes();
             out.write(msgList.length);
@@ -212,11 +211,14 @@ public class FriendChatWindow extends JFrame implements Config {
 
     }
 
+    //视频聊天前先发送视频申请
     public void requireSend(){
         JSONObject js = new JSONObject();
         js.put("userID" , userID);
         js.put("friendID" , friendID);
+        js.put("sendTime" , "null");
         js.put("msgType" , 3);
+        js.put("content" , "1");
         String pak = js.toString();
         try {
             OutputStream out = require.getOutputStream();
@@ -244,6 +246,7 @@ public class FriendChatWindow extends JFrame implements Config {
         videoSocketInit();
         setWindows();
         layOut();
+//        new VideoRecive(require , friendName , userID).start();
         messagePanelBackGround();
         buttonSet();
         this.setVisible(true);
@@ -299,9 +302,10 @@ class VideoRecive extends Thread{
     Socket socket;
     int videoStatus = 0;
     JFrame frame;
-    String friendName;
+    String friendName , userName;
+    String userID , friendID;
 
-    public VideoRecive(Socket socket , String friendName) {
+    public VideoRecive(Socket socket , String friendName , String userID) {
         this.socket = socket;
         this.friendName = friendName;
     }
@@ -378,9 +382,15 @@ class VideoRecive extends Thread{
     }
 
     public void requireReply(int reply){
+        JSONObject js = new JSONObject();
+        js.put("msgType" , 3);
+        js.put("userID" , userID);
+        js.put("friendID" , friendID);
+        js.put("reply" , reply);
+        String pak = js.toString();
         try {
             OutputStream out = socket.getOutputStream();
-            out.write(reply);
+            out.write(pak.getBytes());
             out.flush();
         } catch (IOException e) {
             e.printStackTrace();
